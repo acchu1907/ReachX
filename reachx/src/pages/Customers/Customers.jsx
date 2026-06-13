@@ -227,11 +227,11 @@ const deleteCustomer = async (id) => {
 
                 <td>
                   {customer.status === "Active" ? (
-                    <span className="badge bg-success">
+                    <span className="status-active ">
                       Active
                     </span>
                   ) : (
-                    <span className="badge bg-secondary">
+                    <span className="status-draft">
                       Inactive
                     </span>
                   )}

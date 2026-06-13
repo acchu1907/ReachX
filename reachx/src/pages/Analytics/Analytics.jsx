@@ -1,4 +1,6 @@
 import MainLayout from "../../layouts/MainLayout";
+import { useEffect, useState } from "react";
+
 import {
   LineChart,
   Line,
@@ -6,101 +8,200 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  CartesianGrid,
+  BarChart,
+  Bar,
 } from "recharts";
 
 function Analytics() {
-  const data = [
-    { month: "Jan", campaigns: 20 },
-    { month: "Feb", campaigns: 35 },
-    { month: "Mar", campaigns: 28 },
-    { month: "Apr", campaigns: 45 },
-    { month: "May", campaigns: 60 },
+
+  const [analytics, setAnalytics] = useState({
+  total_customers: 0,
+  total_campaigns: 0,
+  running_campaigns: 0,
+  delivered_campaigns: 0,
+  draft_campaigns: 0,
+  total_revenue: 0,
+});
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/analytics/")
+      .then((response) => response.json())
+      .then((data) => {
+        setAnalytics(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }, []);
+
+  const chartData = [
+    {
+      name: "Running",
+      value: analytics.running_campaigns,
+    },
+    {
+      name: "Delivered",
+      value: analytics.delivered_campaigns,
+    },
+    {
+      name: "Draft",
+      value: analytics.draft_campaigns,
+    },
   ];
+
+
+
+
+const businessData = [
+  {
+    name: "Customers",
+    value: analytics.total_customers,
+  },
+  {
+    name: "Campaigns",
+    value: analytics.total_campaigns,
+  },
+  {
+    name: "Revenue",
+    value: analytics.total_revenue,
+  },
+];
+
 
   return (
     <MainLayout>
 
-      <div className="hero-card">
-        <h2>📈 Analytics Dashboard</h2>
-        <p>
-          Track campaign performance, customer engagement,
-          and AI-driven growth insights.
-        </p>
-      </div>
+      <h1 className="page-title mb-4">
+        Analytics Dashboard
+      </h1>
 
-      
+      <div className="stats-grid">
 
-      <div className="row g-4 mb-4">
-
-        <div className="col-md-4">
-          <div className="card card-shadow p-4">
-            <h6 className="kpi-label">Campaign Reach</h6>
-            <h2 className="kpi-value">78%</h2>
-          </div>
+        <div className="stat-box">
+          <h3>{analytics.total_customers}</h3>
+          <p>Total Customers</p>
         </div>
 
-        <div className="col-md-4">
-          <div className="card card-shadow p-4">
-            <h6 className="kpi-label">Open Rate</h6>
-            <h2 className="kpi-value">74%</h2>
-          </div>
+        <div className="stat-box">
+          <h3>{analytics.total_campaigns}</h3>
+          <p>Total Campaigns</p>
         </div>
 
-        <div className="col-md-4">
-          <div className="card card-shadow p-4">
-            <h6 className="kpi-label">Conversions</h6>
-            <h2 className="kpi-value">12%</h2>
-          </div>
+        <div className="stat-box">
+          <h3>{analytics.running_campaigns}</h3>
+          <p>Running Campaigns</p>
         </div>
 
-      </div>
+        <div className="stat-box">
+          <h3>{analytics.delivered_campaigns}</h3>
+          <p>Delivered Campaigns</p>
 
-      <div className="card card-shadow p-4">
-
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h4>Campaign Performance Trend</h4>
-
-          <span className="badge bg-primary">
-            Last 5 Months
-          </span>
+          
         </div>
-
-        <ResponsiveContainer width="100%" height={350}>
-          <LineChart data={data}>
-            <CartesianGrid strokeDasharray="3 3" />
-
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-
-            <Line
-              type="monotone"
-              dataKey="campaigns"
-              stroke="#2563EB"
-              strokeWidth={3}
-            />
-          </LineChart>
-        </ResponsiveContainer>
+        <div className="stat-box">
+  <h3>₹{analytics.total_revenue}</h3>
+  <p>Total Revenue</p>
+</div>
 
       </div>
 
       <div className="row mt-4">
 
-  <div className="col-md-6">
-    <div className="alert alert-success">
-      📈 Campaign performance increased by 24% this month.
-    </div>
+        <div className="col-lg-6">
+
+          <div className="card card-shadow p-4">
+
+            <h4>Campaign Status</h4>
+
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
+              <BarChart data={chartData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey="value" fill="#4F46E5" />
+              </BarChart>
+            </ResponsiveContainer>
+
+          </div>
+
+        </div>
+
+        <div className="col-lg-6">
+
+          <div className="card card-shadow p-4">
+
+           <h4>Business Overview</h4>
+
+            <ResponsiveContainer
+              width="100%"
+              height={300}
+            >
+              <LineChart data={businessData}>
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#4F46E5"
+                  strokeWidth={3}
+                />
+              </LineChart>
+            </ResponsiveContainer>
+            
+
+</div>
+
+          </div>
+
+          
+
+        </div>
+
+        <div className="card card-shadow p-4 mt-4">
+
+  <h4>🤖 AI Insights</h4>
+
+  <div className="alert alert-success mt-3">
+    ✅ Delivered Campaigns:
+    {analytics.delivered_campaigns}
   </div>
 
-  <div className="col-md-6">
-    <div className="alert alert-primary">
-      🤖 AI recommends WhatsApp campaigns for inactive customers.
-    </div>
+  <div className="alert alert-warning">
+    🚀 Running Campaigns:
+    {analytics.running_campaigns}
+  </div>
+
+  <div className="alert alert-secondary">
+    📝 Draft Campaigns:
+    {analytics.draft_campaigns}
+  </div>
+
+  <div className="alert alert-info">
+    💰 Revenue Generated:
+    ₹{analytics.total_revenue}
+  </div>
+
+  <div className="alert alert-primary">
+
+    🤖 AI Recommendation:
+
+    {analytics.running_campaigns === 0
+      ? " No active campaigns. Consider launching a new campaign."
+      : analytics.running_campaigns >
+        analytics.delivered_campaigns
+      ? " High number of active campaigns. Monitor performance closely."
+      : " Delivered campaigns are performing well. Focus on customer retention."}
+
   </div>
 
 </div>
 
+ 
     </MainLayout>
   );
 }

@@ -5,12 +5,55 @@ import { MdMarkEmailRead } from "react-icons/md";
 import { IoMdOpen } from "react-icons/io";
 import { BsCursorFill } from "react-icons/bs";
 
+import { useState, useEffect } from "react";
+
 
 
 
 
 
 function Dashboard() {
+
+
+
+const [campaigns, setCampaigns] = useState([]); 
+
+useEffect(() => {
+  fetch("http://127.0.0.1:8000/api/campaigns/")
+    .then((response) => response.json())
+    .then((data) => {
+      setCampaigns(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}, []);
+  
+
+const [analytics, setAnalytics] = useState({
+  total_customers: 0,
+  total_campaigns: 0,
+  running_campaigns: 0,
+  delivered_campaigns: 0,
+  draft_campaigns: 0,
+  total_revenue: 0,
+});
+
+useEffect(() => {
+  fetch("http://127.0.0.1:8000/api/analytics/")
+    .then((response) => response.json())
+    .then((data) => {
+      setAnalytics(data);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+}, []);
+
+
+
+
+  
   return (
     <MainLayout>
       <div className="hero-card">
@@ -21,6 +64,33 @@ function Dashboard() {
     and generate AI-powered customer insights.
   </p>
 </div>
+
+
+<div className="stats-grid">
+
+  <div className="stat-card">
+  <h2>{analytics?.total_customers || 0}</h2>
+  <p>Total Customers</p>
+</div>
+
+<div className="stat-card">
+  <h2>{analytics?.total_campaigns || 0}</h2>
+  <p>Total Campaigns</p>
+</div>
+
+<div className="stat-card">
+  <h2>{analytics?.running_campaigns || 0}</h2>
+  <p>Running Campaigns</p>
+</div>
+
+<div className="stat-card">
+  <h2>₹{analytics?.total_revenue || 0}</h2>
+  <p>Total Revenue</p>
+</div>
+
+</div>
+
+
         
       
       <h1 className="page-title mb-4">
@@ -30,27 +100,30 @@ function Dashboard() {
       <div className="row g-4">
 
         <div className="col-md-4">
-          <StatCard title="Customers" value="1250" icon={<FaUsers  color="#2563EB"/>} />
+          <StatCard
+  title="Customers"
+  value={analytics.total_customers}
+/>
         </div>
 
         <div className="col-md-4">
-          <StatCard title="Orders" value="4520" icon={<FaShoppingCart  color="#2563EB"/>} />
+          <StatCard title="Orders" value={analytics.total_orders} icon={<FaShoppingCart  color="#2563EB"/>} />
         </div>
 
         <div className="col-md-4">
-          <StatCard title="Campaigns" value="120" icon={<FaBullhorn  color="#2563EB"/>} />
+          <StatCard title="Campaigns" value={analytics.total_campaigns} icon={<FaBullhorn  color="#2563EB"/>} />
         </div>
 
         <div className="col-md-4">
-          <StatCard title="Delivery Rate" value="92%" icon={<MdMarkEmailRead  color="#2563EB"/>} />
+          <StatCard title="Delivery Rate" value={analytics.delivery_rate} icon={<MdMarkEmailRead  color="#2563EB"/>} />
         </div>
 
         <div className="col-md-4">
-          <StatCard title="Open Rate" value="74%" icon={<IoMdOpen  color="#2563EB"/>} />
+          <StatCard title="Open Rate" value={analytics.open_rate} icon={<IoMdOpen  color="#2563EB"/>} />
         </div>
 
         <div className="col-md-4">
-          <StatCard title="Click Rate" value="38%" icon={<BsCursorFill  color="#2563EB"/>} />
+          <StatCard title="Click Rate" value={analytics.click_rate} icon={<BsCursorFill  color="#2563EB"/>} />
         </div>
 
       </div>
@@ -74,17 +147,23 @@ function Dashboard() {
         </thead>
 
         <tbody>
-          <tr>
-            <td>Summer Sale</td>
-            <td>500</td>
-            <td>Delivered</td>
-          </tr>
+          
+         {campaigns.slice(0, 5).map((campaign) => (
+  <tr key={campaign.id}>
+    <td>{campaign.name}</td>
+    <td>{campaign.audience}</td>
+    <td>{campaign.status}</td>
+    {campaigns.length === 0 && (
+  <tr>
+    <td colSpan="3" className="text-center">
+      No campaigns available
+    </td>
+  </tr>
+)}
+  </tr>
 
-          <tr>
-            <td>Diwali Offer</td>
-            <td>800</td>
-            <td>Running</td>
-          </tr>
+  
+))}
 
         </tbody>
 
@@ -100,11 +179,13 @@ function Dashboard() {
 
       <h4>AI Insights</h4>
       <div className="alert alert-primary">
-  146 customers inactive for 60+ days
+  Customers:
+{analytics.total_customers}
 </div>
 
 <div className="alert alert-success">
-  WhatsApp predicted engagement: 78%
+ Active campaigns:
+{analytics.running_campaigns}
 </div>
 
 <div className="alert alert-warning">

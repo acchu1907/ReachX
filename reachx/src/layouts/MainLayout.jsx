@@ -1,7 +1,18 @@
 import Sidebar from "../components/Sidebar/sidebar";
 import { FaBell } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function MainLayout({ children }) {
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+
+  localStorage.removeItem("isLoggedIn");
+
+  navigate("/login");
+
+};
   return (
     <div className="app-layout">
 
@@ -19,12 +30,16 @@ function MainLayout({ children }) {
 
           <div className="topbar-right">
 
-            <FaBell className="notification-icon" />
+  <FaBell className="notification-icon" />
 
-            <div className="profile-card">
-              <div className="profile-avatar">
-                A
-              </div>
+  <button
+    className="btn btn-danger btn-sm me-3"
+    onClick={handleLogout}
+  >
+    Logout
+  </button>
+
+  <div className="profile-card">
 
               <div>
                 <h6>Ashwitha</h6>
