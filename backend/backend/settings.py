@@ -11,6 +11,13 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")
+
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -47,6 +54,8 @@ INSTALLED_APPS = [
     'campaigns',
     'ai_builder',
     'orders',
+    "segments",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -128,3 +137,6 @@ CORS_ALLOW_ALL_ORIGINS = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+print("Gemini key:", GEMINI_API_KEY)
+

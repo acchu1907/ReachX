@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from django.db.models import Sum
 from customers.models import Customer
 from campaigns.models import Campaign
-
+from orders.models import Order
 
 
 @api_view(['GET'])
@@ -13,6 +13,8 @@ def analytics_summary(request):
     total_customers = Customer.objects.count()
 
     total_campaigns = Campaign.objects.count()
+
+    total_orders = Order.objects.count()
 
     running_campaigns = Campaign.objects.filter(
         status="Running"

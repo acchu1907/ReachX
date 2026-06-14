@@ -12,6 +12,8 @@ import {
   Bar,
 } from "recharts";
 
+
+
 function Analytics() {
 
   const [analytics, setAnalytics] = useState({
@@ -21,6 +23,7 @@ function Analytics() {
   delivered_campaigns: 0,
   draft_campaigns: 0,
   total_revenue: 0,
+  total_orders: 0,
 });
 
   useEffect(() => {
@@ -75,35 +78,79 @@ const businessData = [
         Analytics Dashboard
       </h1>
 
-      <div className="stats-grid">
+      <div className="analytics-grid">
 
-        <div className="stat-box">
-          <h3>{analytics.total_customers}</h3>
-          <p>Total Customers</p>
-        </div>
 
-        <div className="stat-box">
-          <h3>{analytics.total_campaigns}</h3>
-          <p>Total Campaigns</p>
-        </div>
+  <div className="analytics-card">
 
-        <div className="stat-box">
-          <h3>{analytics.running_campaigns}</h3>
-          <p>Running Campaigns</p>
-        </div>
+    <h2>
+      {analytics.total_customers}
+    </h2>
 
-        <div className="stat-box">
-          <h3>{analytics.delivered_campaigns}</h3>
-          <p>Delivered Campaigns</p>
+    <p>
+      Total Customers
+    </p>
 
-          
-        </div>
-        <div className="stat-box">
-  <h3>₹{analytics.total_revenue}</h3>
-  <p>Total Revenue</p>
+  </div>
+
+
+
+  <div className="analytics-card">
+
+    <h2>
+      {analytics.total_campaigns}
+    </h2>
+
+    <p>
+      Total Campaigns
+    </p>
+
+  </div>
+
+
+
+  <div className="analytics-card running">
+
+    <h2>
+      {analytics.running_campaigns}
+    </h2>
+
+    <p>
+      Running Campaigns
+    </p>
+
+  </div>
+
+
+
+  <div className="analytics-card delivered">
+
+    <h2>
+      {analytics.delivered_campaigns}
+    </h2>
+
+    <p>
+      Delivered Campaigns
+    </p>
+
+  </div>
+
+
+
+  <div className="analytics-card revenue">
+
+    <h2>
+      ₹{analytics.total_revenue}
+    </h2>
+
+    <p>
+      Total Revenue
+    </p>
+
+  </div>
+
+
 </div>
-
-      </div>
 
       <div className="row mt-4">
 

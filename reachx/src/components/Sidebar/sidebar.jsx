@@ -10,6 +10,7 @@ import {
   FaBullhorn,
   FaChartBar,
   FaRobot,
+  FaLayerGroup,
 } from "react-icons/fa";
 
 function Sidebar() {
@@ -52,6 +53,11 @@ function Sidebar() {
           <FaRobot />
           AI Builder
         </NavLink>
+
+        <NavLink to="/segments">
+  <FaLayerGroup />
+  Segments
+</NavLink>
 
       </div>
 

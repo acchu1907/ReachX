@@ -9,6 +9,7 @@ import Analytics from "./pages/Analytics/Analytics";
 import AIBuilder from "./pages/AIBuilder/AIBuilder";
 import Login from "./pages/Login/Login";
 import { Navigate } from "react-router-dom";
+import Segments from "./pages/Segments/Segments";
 
 
 function ProtectedRoute({ children }) {
@@ -73,6 +74,11 @@ function App() {
       <Analytics />
     </ProtectedRoute>
   }
+/>
+
+<Route
+  path="/segments"
+  element={<Segments />}
 />
 
 <Route

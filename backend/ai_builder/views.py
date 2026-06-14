@@ -2,24 +2,16 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
-from customers.models import Customer
+import json
+
+from .gemini_service import generate_ai_campaign
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 def generate_campaign(request):
 
-    prompt = request.data.get(
-        "prompt",
-        ""
-    )
+    prompt = request.data.get("prompt")
 
-    audience_size = Customer.objects.count()
+    result = generate_ai_campaign(prompt)
 
-    return Response({
-        "audience": audience_size,
-        "channel": "WhatsApp",
-        "reach": "82%",
-        "conversion": "14%",
-        "message":
-            f"Campaign generated for: {prompt}"
-    })
+    return Response(result)

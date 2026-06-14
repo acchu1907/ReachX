@@ -5,34 +5,92 @@ function AIBuilder() {
 
   const [prompt, setPrompt] = useState("");
   const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
 
-  const generateCampaign = async () => {
+
+/* create campaign in backend using result data */
+
+  const createCampaign = async () => {
+
+  const campaignData = {
+
+    name: "AI Generated Campaign",
+
+    audience: result.audience,
+
+    status: "Draft",
+
+    segment_city: "Chennai",
+
+    segment_min_spend: 10000,
+
+};
+
+  try {
+
+    const response = await fetch(
+      "http://127.0.0.1:8000/api/campaigns/",
+      {
+        method:"POST",
+
+        headers:{
+          "Content-Type":"application/json"
+        },
+
+        body:JSON.stringify(campaignData)
+      }
+    );
+
+
+    const data = await response.json();
+
+    console.log(data);
+
+
+    alert("Campaign Created Successfully");
+
+
+  }
+  catch(error){
+
+    console.error(error);
+
+  }
+
+};
+
+
+const generateCampaign = async () => {
+    setLoading(true);
 
     try {
+        const response = await fetch(
+            "http://127.0.0.1:8000/api/ai-builder/",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    prompt: prompt
+                })
+            }
+        );
 
-      const response = await fetch(
-        "http://127.0.0.1:8000/api/ai-builder/",
-        {
-          method: "POST",
+        const data = await response.json();
 
-          headers: {
-            "Content-Type": "application/json",
-          },
+        console.log("AI Response:", data);
 
-          body: JSON.stringify({
-            prompt,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      setResult(data);
+        setResult(data);
 
     } catch (error) {
-      console.error(error);
+        console.error(error);
     }
-  };
+
+    finally {
+        setLoading(false);
+    }
+};
 
   return (
     <MainLayout>
@@ -53,12 +111,13 @@ function AIBuilder() {
           }
         />
 
-        <button
-          className="btn btn-primary"
-          onClick={generateCampaign}
-        >
-          Generate Campaign
-        </button>
+       <button
+  className="btn btn-primary"
+  onClick={generateCampaign}
+  disabled={loading}
+>
+  {loading ? "Generating..." : "Generate Campaign"}
+</button>
 
       </div>
 
@@ -78,20 +137,26 @@ function AIBuilder() {
             {result.channel}
           </p>
 
-          <p>
-            <strong>Reach:</strong>{" "}
-            {result.reach}
-          </p>
+         <p>
+  <strong>Campaign Name:</strong>{" "}
+  {result.name}
+</p>
 
-          <p>
-            <strong>Conversion:</strong>{" "}
-            {result.conversion}
-          </p>
+<p>
+  <strong>City:</strong>{" "}
+  {result.city}
+</p>
 
-          <p>
-            <strong>Message:</strong>{" "}
-            {result.message}
-          </p>
+<p>
+  <strong>Minimum Spend:</strong>{" "}
+  {result.min_spend}
+</p>
+          <button
+  className="btn btn-success mt-3"
+  onClick={createCampaign}
+>
+  Create Campaign
+</button>
 
         </div>
 

@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
 
@@ -30,4 +31,13 @@ path(
     include('orders.urls')
 ),
 
+path(
+    "api/segments/",
+    include("segments.urls")
+),
+
+path(
+    "api/channels/",
+    include("channels.urls")
+),
 ]

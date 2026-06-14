@@ -7,4 +7,6 @@ urlpatterns = [
         '',
         generate_campaign
     ),
+
+    
 ]

@@ -14,19 +14,52 @@ def audience_preview(request):
 
     city = request.GET.get("city")
     min_spend = request.GET.get("min_spend")
+    status = request.GET.get("status")
+
 
     customers = Customer.objects.all()
 
+
     if city:
-        customers = customers.filter(city__iexact=city)
+        customers = customers.filter(
+            city__iexact=city
+        )
+
 
     if min_spend:
         customers = customers.filter(
             total_spent__gte=min_spend
         )
 
+
+    if status:
+        customers = customers.filter(
+            status__iexact=status
+        )
+
+
+    customer_data = []
+
+    for customer in customers:
+
+        customer_data.append({
+
+            "id": customer.id,
+            "name": customer.name,
+            "email": customer.email,
+            "city": customer.city,
+            "total_spent": customer.total_spent,
+            "status": customer.status
+
+        })
+
+
     return Response({
-        "count": customers.count()
+
+        "audience_count": customers.count(),
+
+        "customers": customer_data
+
     })
 
 
@@ -49,11 +82,39 @@ def campaign_list(request):
             data=request.data
         )
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
+    if serializer.is_valid():
+        campaign = serializer.save()
 
-        return Response(serializer.errors)
+    customers = Customer.objects.all()
+
+
+    if campaign.segment_city:
+
+        customers = customers.filter(
+            city__iexact=campaign.segment_city
+        )
+
+
+    if campaign.segment_min_spend:
+
+        customers = customers.filter(
+            total_spent__gte=campaign.segment_min_spend
+        )
+
+
+    campaign.audience_count = customers.count()
+
+    campaign.save()
+
+
+    return Response(
+        CampaignSerializer(campaign).data
+    )
+
+
+
+
+    return Response(serializer.errors)
 
 
 @api_view(['DELETE'])

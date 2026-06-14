@@ -202,7 +202,7 @@ const previewAudience = async () => {
 
     const data = await response.json();
 
-    setAudienceCount(data.count);
+    setAudienceCount(data.audience_count);
 
   } catch (error) {
     console.error(error);
@@ -229,53 +229,66 @@ const draftCampaigns = campaigns.filter(
 
 
 
-    <MainLayout>
-      <div className="d-flex justify-content-between align-items-center mb-4">
-
-  <h1 className="page-title">
-    Campaigns
-  </h1>
+     <MainLayout>
 
 
-<div className="stats-grid mb-4">
+    {/* HEADER + STATS */}
 
-  <div className="stat-box">
-    <h3>{totalCampaigns}</h3>
-    <p>Total Campaigns</p>
-  </div>
+    <div className="campaign-header">
 
-  <div className="status-running">
-    <h3>{runningCampaigns}</h3>
-    <p>Running</p>
-  </div>
+      <h1 className="page-title">
+        Campaigns
+      </h1>
 
-  <div className="status-delivered ">
-    <h3>{deliveredCampaigns}</h3>
-    <p>Delivered</p>
-  </div>
 
-  <div className="status-draft">
-    <h3>{draftCampaigns}</h3>
-    <p>Draft</p>
-  </div>
+      <button
+        className="btn btn-primary"
+        onClick={() => setShowModal(true)}
+      >
+        + Create Campaign
+      </button>
 
-</div>
-  <button
-    className="btn btn-primary"
-    onClick={() => setShowModal(true)}
-  >
-    + Create Campaign
-  </button>
+    </div>
 
-</div>
 
-<input
-  type="text"
-  className="search-input mb-4"
-  placeholder="Search Campaign..."
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
-/>
+    <div className="stats-grid">
+
+      <div className="stat-card stat-total">
+        <h2>{totalCampaigns}</h2>
+        <p>Total Campaigns</p>
+      </div>
+
+
+      <div className="stat-card stat-running">
+        <h2>{runningCampaigns}</h2>
+        <p>Running</p>
+      </div>
+
+
+      <div className="stat-card stat-delivered">
+        <h2>{deliveredCampaigns}</h2>
+        <p>Delivered</p>
+      </div>
+
+
+      <div className="stat-card stat-draft">
+        <h2>{draftCampaigns}</h2>
+        <p>Draft</p>
+      </div>
+
+    </div>
+
+
+
+    {/* SEARCH BOX */}
+
+    <input
+      type="text"
+      className="search-input mb-4"
+      placeholder="Search Campaign..."
+      value={search}
+      onChange={(e) => setSearch(e.target.value)}
+    />
 
       <div className="card card-shadow p-4 campaign-card">
 
@@ -302,7 +315,7 @@ const draftCampaigns = campaigns.filter(
             {filteredCampaigns.map((campaign) => (
               <tr key={campaign.id}>
                 <td>{campaign.name}</td>
-                <td>{campaign.audience}</td>
+                <td>{campaign.audience_count} customers</td>
                <td>
   {campaign.status === "Delivered" && (
     <span className="status-delivered ">
@@ -332,10 +345,31 @@ const draftCampaigns = campaigns.filter(
   </button>
 
   <button
-    className="btn btn-danger btn-sm"
+    className="btn btn-danger btn-sm me-2"
     onClick={() => deleteCampaign(campaign.id)}
   >
     Delete
+  </button>
+
+  <button
+    className="btn btn-success btn-sm"
+    onClick={async () => {
+
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/channels/send/",
+        {
+          method: "POST"
+        }
+      );
+
+      const data = await response.json();
+
+      alert(
+        `Campaign Sent!\n\nSent: ${data.sent}\nDelivered: ${data.delivered}\nOpened: ${data.opened}\nClicked: ${data.clicked}`
+      );
+    }}
+  >
+    🚀 Send
   </button>
 </td>
 <td>{campaign.segment_city}</td>
@@ -443,8 +477,10 @@ const draftCampaigns = campaigns.filter(
 </button>
 
 <div className="alert alert-primary mt-3">
-  Matching Customers:
-  {audienceCount}
+  🎯 Audience Size:
+  <strong className="ms-2">
+    {audienceCount} customers
+  </strong>
 </div>
 
 
