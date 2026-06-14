@@ -338,12 +338,15 @@ const draftCampaigns = campaigns.filter(
 
 <td>
   <button
-    className="btn btn-secondary btn-sm me-2"
-    onClick={() => editCampaign(campaign)}
-  >
-    Edit
-  </button>
-
+  className="btn btn-success btn-sm"
+  style={{
+    background: "#4F46E5",
+    color: "#fff",
+    border: "none"
+  }}
+>
+  Edit
+</button>
   <button
     className="btn btn-danger btn-sm me-2"
     onClick={() => deleteCampaign(campaign.id)}
