@@ -1,5 +1,6 @@
 import MainLayout from "../../layouts/MainLayout";
 import { useState, useEffect } from "react";
+import api from "../../services/api";
 
 function Campaigns() {
 
@@ -24,13 +25,12 @@ const [minSpend, setMinSpend] = useState("");
 const [audienceCount, setAudienceCount] = useState(0);
 
  useEffect(() => {
-  fetch("http://127.0.0.1:8000/api/campaigns/")
-    .then((response) => response.json())
+  api.getCampaigns()
     .then((data) => {
       setCampaigns(data);
     })
     .catch((error) => {
-      console.error(error);
+      console.error("Failed to load campaigns:", error);
     });
 }, []);
 
@@ -50,20 +50,7 @@ const addCampaign = async () => {
 };
   try {
 
-    const response = await fetch(
-      "http://127.0.0.1:8000/api/campaigns/",
-      {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify(newCampaign),
-      }
-    );
-
-    const data = await response.json();
+    const data = await api.createCampaign(newCampaign);
 
     setCampaigns([
       ...campaigns,
@@ -77,7 +64,7 @@ const addCampaign = async () => {
     setShowModal(false);
 
   } catch (error) {
-    console.error(error);
+    console.error("Failed to create campaign:", error);
   }
 };
 
@@ -87,12 +74,7 @@ const deleteCampaign = async (id) => {
 
   try {
 
-    await fetch(
-      `http://127.0.0.1:8000/api/campaigns/${id}/`,
-      {
-        method: "DELETE",
-      }
-    );
+    await api.deleteCampaign(id);
 
     setCampaigns(
       campaigns.filter(
@@ -101,7 +83,7 @@ const deleteCampaign = async (id) => {
     );
 
   } catch (error) {
-    console.error(error);
+    console.error("Failed to delete campaign:", error);
   }
 };
 

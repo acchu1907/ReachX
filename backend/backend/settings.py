@@ -28,12 +28,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=0b45sr29zdm$=ock08nktf#z9^m=$5(5*p0@l9vv_3!-e^w6u'
+SECRET_KEY = os.getenv(
+    'SECRET_KEY',
+    'django-insecure-=0b45sr29zdm$=ock08nktf#z9^m=$5(5*p0@l9vv_3!-e^w6u'
+)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -127,16 +130,23 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 
 USE_I18N = True
+# CORS Configuration for frontend integration
+CORS_ALLOWED_ORIGINS = os.getenv(
+    'CORS_ALLOWED_ORIGINS',
+    'http://localhost:3000,http://127.0.0.1:3000'
+).split(',')
 
-USE_TZ = True
+# For development convenience, allow all in debug mode
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
 
-CORS_ALLOW_ALL_ORIGINS = True
+
+STATIC_URL = 'static/'print("Gemini key:", GEMINI_API_KEY)
+
+
 
 
 # Static files (CSS, JavaScript, Images)
+print("Gemini key:", GEMINI_API_KEY)STATIC_URL = 'static/'
+
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
-
-STATIC_URL = 'static/'
-
-print("Gemini key:", GEMINI_API_KEY)
-
