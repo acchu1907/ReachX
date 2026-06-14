@@ -116,6 +116,7 @@ const filteredCampaigns = campaigns.filter(
 
 
 /*edit campaign*/
+// eslint-disable-next-line no-unused-vars
 const editCampaign = (campaign) => {
 
   setEditingId(campaign.id);
@@ -186,6 +187,12 @@ const updateCampaign = async () => {
     setEditingId(null);
 
     setShowModal(false);
+    setName("");
+setAudience("");
+setStatus("Draft");
+setSegmentCity("");
+setMinSpend("");
+setAudienceCount(0);
 
   } catch (error) {
     console.error(error);
@@ -243,7 +250,16 @@ const draftCampaigns = campaigns.filter(
 
       <button
         className="btn btn-primary"
-        onClick={() => setShowModal(true)}
+        onClick={() => {
+  setEditingId(null);
+  setName("");
+  setAudience("");
+  setStatus("Draft");
+  setSegmentCity("");
+  setMinSpend("");
+  setAudienceCount(0);
+  setShowModal(true);
+}}
       >
         + Create Campaign
       </button>
@@ -337,13 +353,14 @@ const draftCampaigns = campaigns.filter(
 </td>
 
 <td>
-  <button
+ <button
   className="btn btn-success btn-sm"
   style={{
     background: "#4F46E5",
     color: "#fff",
     border: "none"
   }}
+  onClick={() => editCampaign(campaign)}
 >
   Edit
 </button>
@@ -446,7 +463,10 @@ const draftCampaigns = campaigns.filter(
 
         <button
           className="btn btn-secondary me-2"
-          onClick={() => setShowModal(false)}
+          onClick={() => {
+  setShowModal(false);
+  setEditingId(null);
+}}
         >
           Cancel
         </button>
@@ -491,14 +511,13 @@ const draftCampaigns = campaigns.filter(
        <button
   className="btn btn-success"
   onClick={
-    editingId
-      ? updateCampaign
-      : addCampaign
-  }
+   editingId !== null
+  ? updateCampaign
+  : addCampaign}
 >
-  {editingId
-    ? "Update Campaign"
-    : "Save Campaign"}
+  {editingId !== null
+  ? "Update Campaign"
+  : "Save Campaign"}
 </button>
       </div>
 

@@ -65,20 +65,7 @@ const addCustomer = async () => {
 };
 
 
-const editCustomer = (customer) => {
 
-  setEditingId(customer.id);
-
-  setName(customer.name);
-
-  setEmail(customer.email);
-
-  setCity(customer.city);
-
-  setTotalSpent(customer.total_spent);
-
-  setShowModal(true);
-};
 
 
 const updateCustomer = async () => {
@@ -239,12 +226,20 @@ const deleteCustomer = async (id) => {
 
                 <td>
 
-                  <button
-  className="btn btn-danger btn-sm"
+                 <button
+  className="btn btn-sm"
   style={{
     background: "#4F46E5",
     color: "#fff",
     border: "none"
+  }}
+  onClick={() => {
+    setEditingId(customer.id);
+    setName(customer.name);
+    setEmail(customer.email);
+    setCity(customer.city);
+    setTotalSpent(customer.total_spent);
+    setShowModal(true);
   }}
 >
   Edit
@@ -338,12 +333,15 @@ const deleteCustomer = async (id) => {
               <button
   className="btn btn-success"
   onClick={
-    editingId
-      ? updateCustomer
-      : addCustomer
-  }
+  editingId !== null
+    ? updateCustomer
+    : addCustomer
+}
+  
 >
-  {editingId ? "Update Customer" : "Save Customer"}
+ {editingId !== null
+  ? "Update Customer"
+  : "Save Customer"}
 </button>
 
             </div>

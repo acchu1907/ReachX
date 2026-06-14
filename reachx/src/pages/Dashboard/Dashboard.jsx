@@ -1,9 +1,4 @@
 import MainLayout from "../../layouts/MainLayout";
-import StatCard from "../../components/StatCard/StatCard";
-import { FaUsers, FaShoppingCart, FaBullhorn } from "react-icons/fa";
-import { MdMarkEmailRead } from "react-icons/md";
-import { IoMdOpen } from "react-icons/io";
-import { BsCursorFill } from "react-icons/bs";
 
 
 import { useState, useEffect } from "react";

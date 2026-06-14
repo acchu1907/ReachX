@@ -233,18 +233,17 @@ const editOrder = (order) => {
                 </td>
 
                 <td>
-
-                 <button
-  className="btn btn-danger btn-sm"
+<button
+  className="btn btn-sm"
   style={{
     background: "#4F46E5",
     color: "#fff",
     border: "none"
   }}
+  onClick={() => editOrder(order)}
 >
   Edit
 </button>
-
                  <button
   className="btn btn-danger btn-sm"
   onClick={() => {
