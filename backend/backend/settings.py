@@ -19,7 +19,6 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-SECRET_KEY = os.environ.get("SECRET_KEY")
 
 
 
@@ -46,7 +45,6 @@ ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1"
 ]
-
 
 # Application definition
 
@@ -149,7 +147,7 @@ CORS_ALLOWED_ORIGINS = [
 # For development convenience, allow all in debug mode
 #if DEBUG:
  #   CORS_ALLOW_ALL_ORIGINS = True
-DEBUG = False
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
 
 # Static files (CSS, JavaScript, Images)
