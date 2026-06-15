@@ -12,19 +12,31 @@ function AIBuilder() {
 
   const createCampaign = async () => {
 
-  const campaignData = {
+  if(!result){
+    alert("Generate campaign first");
+    return;
+  }
 
-    name: "AI Generated Campaign",
+ const campaignData = {
 
-    audience: result.audience,
+    name: result.name,
+
+    audience: 1000,
+
+    audience_count: 1000,
 
     status: "Draft",
 
-    segment_city: "Chennai",
+    segment_city: result.city,
 
-    segment_min_spend: 10000,
+    segment_min_spend: result.min_spend,
 
 };
+
+
+
+  console.log("Sending campaign:", campaignData);
+
 
   try {
 
@@ -42,12 +54,28 @@ function AIBuilder() {
     );
 
 
-    const data = await response.json();
+   const text = await response.text();
 
-    console.log(data);
+console.log("Backend response:", text);
 
+if(response.ok){
+
+    const data = JSON.parse(text);
+
+    console.log("Created Campaign:", data);
 
     alert("Campaign Created Successfully");
+
+    window.location.href="/campaigns";
+
+}
+else{
+
+    console.error("Campaign Error:", text);
+
+    alert("Campaign creation failed");
+
+}
 
 
   }
@@ -59,37 +87,71 @@ function AIBuilder() {
 
 };
 
-
 const generateCampaign = async () => {
+
+    if(!prompt.trim()){
+        alert("Please describe your campaign first");
+        return;
+    }
+
+
+    console.log("Generate clicked");
+
+    if(!prompt){
+        alert("Please enter a campaign description");
+        return;
+    }
+
     setLoading(true);
 
     try {
+
+        console.log("Sending:", prompt);
+
+
         const response = await fetch(
             "http://127.0.0.1:8000/api/ai-builder/",
             {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
                 },
-                body: JSON.stringify({
-                    prompt: prompt
+
+                body:JSON.stringify({
+                    prompt:prompt
                 })
             }
         );
 
-        const data = await response.json();
 
-        console.log("AI Response:", data);
+        console.log("Status:", response.status);
+
+
+        const text = await response.text();
+
+        console.log("Backend response:", text);
+
+
+        const data = JSON.parse(text);
+
 
         setResult(data);
 
-    } catch (error) {
-        console.error(error);
+
+    }
+    catch(error){
+
+        console.error("AI Error:",error);
+
     }
 
-    finally {
+    finally{
+
         setLoading(false);
+
     }
+
 };
 
   return (
@@ -128,10 +190,9 @@ const generateCampaign = async () => {
           <h4>Campaign Result</h4>
 
           <p>
-            <strong>Audience:</strong>{" "}
-            {result.audience}
-          </p>
-
+<strong>Offer:</strong>{" "}
+{result.offer}
+</p>
           <p>
             <strong>Channel:</strong>{" "}
             {result.channel}
@@ -157,6 +218,7 @@ const generateCampaign = async () => {
 >
   Create Campaign
 </button>
+
 
         </div>
 

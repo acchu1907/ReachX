@@ -2,7 +2,10 @@
 import google.generativeai as genai
 from django.conf import settings
 import json
+import re
 
+
+print("Gemini Key:", settings.GEMINI_API_KEY)
 
 genai.configure(
     api_key=settings.GEMINI_API_KEY
@@ -13,34 +16,61 @@ model = genai.GenerativeModel(
     "gemini-2.5-flash"
 )
 
+
 def generate_ai_campaign(prompt):
 
     instruction = f"""
-You are a CRM marketing AI.
+You are an expert marketing campaign strategist.
 
-Create a campaign based on:
-
+User request:
 {prompt}
 
-Return ONLY JSON:
+Generate ONLY a JSON object.
 
-{{
-"name":"",
-"city":"",
-"min_spend":0,
-"channel":"",
-"message":"",
-"offer":""
-}}
+Fields:
+- name
+- city
+- min_spend
+- channel
+- message
+- offer
+
+channel must be one of:
+email, sms, social, whatsapp
+
+Return only JSON.
 """
+
 
     response = model.generate_content(instruction)
 
     text = response.text.strip()
 
-    # Remove markdown fences if Gemini adds them
-    text = text.replace("```json", "")
-    text = text.replace("```", "")
-    text = text.strip()
 
-    return json.loads(text)
+    text = (
+        text
+        .replace("```json", "")
+        .replace("```", "")
+        .strip()
+    )
+
+
+    if not (text.startswith("{") and text.endswith("}")):
+
+        match = re.search(
+            r'\{.*\}',
+            text,
+            re.DOTALL
+        )
+
+        if match:
+            text = match.group()
+
+
+    print("Gemini Response:", text)
+
+
+    result = json.loads(text)
+
+
+    return result
