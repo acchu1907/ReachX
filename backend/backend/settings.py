@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GOOGLE_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 from pathlib import Path
 
@@ -132,6 +132,7 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 # CORS Configuration for frontend integration
 CORS_ALLOWED_ORIGINS = os.getenv(
+    "https://reach-x-mu.vercel.app",
     'CORS_ALLOWED_ORIGINS',
     'http://localhost:3000,http://127.0.0.1:3000'
 ).split(',')
