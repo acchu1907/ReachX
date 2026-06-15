@@ -14,9 +14,14 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 import os
 from dotenv import load_dotenv
 
-load_dotenv()
 
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+
+
+
+load_dotenv()
+SECRET_KEY = os.environ.get("SECRET_KEY")
+
+
 
 from pathlib import Path
 
@@ -36,7 +41,11 @@ SECRET_KEY = os.getenv(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
+ALLOWED_HOSTS = [
+    "reachx-2.onrender.com",
+    "localhost",
+    "127.0.0.1"
+]
 
 
 # Application definition
@@ -132,14 +141,15 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 # CORS Configuration for frontend integration
 CORS_ALLOWED_ORIGINS = [
-    "https://reach-x-mu.vercel.app/",
+    "https://reach-x-mu.vercel.app",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
 
 # For development convenience, allow all in debug mode
-if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
+#if DEBUG:
+ #   CORS_ALLOW_ALL_ORIGINS = True
+DEBUG = False
 
 
 # Static files (CSS, JavaScript, Images)
