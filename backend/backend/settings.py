@@ -131,11 +131,11 @@ TIME_ZONE = 'UTC'
 
 USE_I18N = True
 # CORS Configuration for frontend integration
-CORS_ALLOWED_ORIGINS = os.getenv(
-    "https://reach-x-mu.vercel.app",
-    'CORS_ALLOWED_ORIGINS',
-    'http://localhost:3000,http://127.0.0.1:3000'
-).split(',')
+CORS_ALLOWED_ORIGINS = [
+    "https://reach-x-mu.vercel.app/",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+].split(',')
 
 # For development convenience, allow all in debug mode
 if DEBUG:
